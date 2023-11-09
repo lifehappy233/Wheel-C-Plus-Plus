@@ -1,3 +1,6 @@
 .idea
 build
 cmake-build-debug
+sample-code
+Modern-CMake-for-Cpp
+threadPool/main
