@@ -1,76 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <thread>
-#include <type_traits>
-#include <future>
-#include <queue>
 
-namespace threadPool {
-
-class threadPool {
- public:
-
-  threadPool(size_t pool_size) : pool_size_(pool_size) {
-    for (size_t i = 0; i < pool_size_; i++) {
-      threads_.emplace_back([this](){
-        for (;;) {
-          std::function<void()> task;
-          {
-            std::unique_lock<std::mutex> lock(mutex_);
-            while (!stop_ && tasks_.empty()) {
-              cv_.wait(lock);
-            }
-            if (stop_) {
-              return ;
-            }
-            task = std::move(tasks_.front());
-            tasks_.pop();
-          }
-          task();
-        }
-      });
-    }
-  }
-
-  ~ threadPool() {
-    {
-      std::unique_lock<std::mutex> lock(mutex_);
-      stop_ = true;
-    }
-    cv_.notify_all();
-    for (auto& it : threads_) {
-      it.join();
-    }
-  }
-
-  template<typename F, typename ...Args>
-  auto push(F&& f, Args&& ...args)
-      -> std::future<std::invoke_result_t<F, Args...>> {
-    using retType = std::invoke_result_t<F, Args...>;
-
-    auto task = std::make_shared<std::packaged_task<retType()>>(
-        std::bind(f, std::forward<Args>(args)...));
-    auto res = task->get_future();
-    {
-      std::unique_lock<std::mutex> lock(mutex_);
-      tasks_.push([task = std::move(task)]() {
-        (*task)();
-      });
-      cv_.notify_one();
-    }
-    return res;
-  }
-
- private:
-  bool stop_{false};
-  size_t pool_size_;
-  std::mutex mutex_;
-  std::condition_variable cv_;
-  std::vector<std::thread> threads_;
-  std::queue<std::function<void()>> tasks_;
-};
-
-}
+#include "threadPool.h"
 
 int calc_primes(int n) {
   int cnt = 0;
