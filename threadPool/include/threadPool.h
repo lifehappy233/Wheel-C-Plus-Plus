@@ -1,3 +1,6 @@
+#ifndef THREADPOOL_H_
+#define THREADPOOL_H_
+
 #include <thread>
 #include <type_traits>
 #include <future>
@@ -40,3 +43,5 @@ auto threadPool::push(F &&f, Args &&...args) -> std::future<std::invoke_result_t
 }
 
 }
+
+#endif
