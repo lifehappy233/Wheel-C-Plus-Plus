@@ -4,3 +4,5 @@ cmake-build-debug
 sample-code
 Modern-CMake-for-Cpp
 threadPool/main
+HazardPointer
+LockFreeQueue
