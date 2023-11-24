@@ -3,6 +3,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(lockFree)
 
-add_executable(lockFree main.cpp src/reclaim.cpp)
+add_executable(queue queue_test.cpp src/reclaim.cpp)
 
-target_include_directories(lockFree PRIVATE include)
+target_include_directories(queue PRIVATE include)

@@ -4,12 +4,12 @@
 
 namespace lockFree {
 
-size_t Reclaimer::MarkHazard(void *ptr) {
+int32_t Reclaimer::MarkHazard(void *ptr) {
   if (ptr == nullptr) {
     return -1;
   }
   // 先从 local_hp_list_ 找，这里的保证不会有线程竞争
-  size_t res_index = 0;
+  int32_t res_index = 0;
   for (auto *it : local_hp_list_) {
     if (it->ptr_.load(std::memory_order_relaxed) == nullptr) {
       it->ptr_.store(ptr, std::memory_order_release);
@@ -18,12 +18,12 @@ size_t Reclaimer::MarkHazard(void *ptr) {
     res_index++;
   }
   RequireHazardPoint();
-  res_index = local_hp_list_.size() - 1;
+  res_index = static_cast<int32_t>(local_hp_list_.size()) - 1;
   local_hp_list_[res_index]->ptr_.store(ptr, std::memory_order_release);
   return res_index;
 }
 
-void Reclaimer::UnmarkHazard(size_t index) {
+void Reclaimer::UnmarkHazard(int32_t index) {
   assert(0 <= index && index < local_hp_list_.size());
   local_hp_list_[index]->ptr_.store(nullptr, std::memory_order_release);
 }

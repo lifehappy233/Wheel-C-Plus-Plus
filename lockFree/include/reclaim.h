@@ -5,6 +5,7 @@
 #include <atomic>
 #include <thread>
 #include <cassert>
+#include <iostream>
 #include <functional>
 #include <unordered_map>
 
@@ -29,7 +30,10 @@ struct InternalHazardPoint {
 };
 
 struct HazardList {
-  HazardList() : size_(1), head_(new InternalHazardPoint()) {}
+  HazardList() : size_(1), head_(new InternalHazardPoint()) {
+    // std::cout << std::this_thread::get_id() << " HazardList()\n";
+  }
+
   ~ HazardList() {
     auto *p = head_.load(std::memory_order_acquire);
     while (p) {
@@ -39,7 +43,7 @@ struct HazardList {
     }
   }
 
-  size_t Size() {
+  int32_t Size() {
     return size_.load(std::memory_order_relaxed);
   }
 
@@ -48,7 +52,7 @@ struct HazardList {
   HazardList& operator = (const HazardList &other) = delete;
   HazardList& operator = (HazardList &&other) = delete;
 
-  std::atomic<size_t> size_;
+  std::atomic<int32_t> size_;
   std::atomic<InternalHazardPoint*> head_;
 };
 
@@ -102,9 +106,12 @@ struct ReclaimPool {
 
 class Reclaimer {
  public:
-  explicit Reclaimer(HazardList &global_hp_list) : global_hp_list_(global_hp_list) {}
+  explicit Reclaimer(HazardList &global_hp_list) : global_hp_list_(global_hp_list) {
+    // std::cout << std::this_thread::get_id() << " Reclaimer()\n";
+  }
 
-  ~ Reclaimer() {
+  virtual ~ Reclaimer() {
+    // std::cout << std::this_thread::get_id() << " ~ Reclaimer()\n";
     // 将当前持有的 local hazard point 归还到 global hazard list
     for (auto it : local_hp_list_) {
       assert(it->ptr_.load(std::memory_order_acquire) == nullptr);
@@ -122,9 +129,9 @@ class Reclaimer {
     }
   }
 
-  size_t MarkHazard(void *ptr);
+  int32_t MarkHazard(void *ptr);
 
-  void UnmarkHazard(size_t index);
+  void UnmarkHazard(int32_t index);
 
   void ReclaimLater(void *ptr, std::function<void(void*)> &&delete_function);
 
@@ -148,7 +155,7 @@ class Reclaimer {
   ReclaimPool reclaim_pool_;
   std::unordered_map<void*, ReclaimPoint*> reclaim_map_;
 
-  static const size_t rate_ = 4;
+  static const int32_t rate_ = 4;
 };
 
 class HazardPoint {
@@ -159,19 +166,36 @@ class HazardPoint {
       : reclaimer_(reclaimer), index_(reclaimer->MarkHazard(ptr)) {}
 
   ~ HazardPoint() {
-    if (reclaimer_ != nullptr) {
+    Unmark();
+  }
+
+  int32_t index() {
+    return index_;
+  }
+
+  void Unmark() {
+    if (reclaimer_ != nullptr && index_ != -1) {
       reclaimer_->UnmarkHazard(index_);
     }
   }
 
   HazardPoint(const HazardPoint &other) = delete;
-  HazardPoint(HazardPoint &&other) = delete;
   HazardPoint& operator = (const HazardPoint &other) = delete;
-  HazardPoint& operator = (HazardPoint &&other) = delete;
+
+  HazardPoint(HazardPoint &&other)  noexcept {
+    *this = std::move(other);
+  }
+
+  HazardPoint& operator = (HazardPoint &&other)  noexcept {
+    this->reclaimer_ = other.reclaimer_;
+    this->index_ = other.index_;
+    other.index_ = -1;
+    return *this;
+  }
 
  private:
-  size_t index_;
-  Reclaimer *reclaimer_;
+  int32_t index_{};
+  Reclaimer *reclaimer_{};
 };
 
 }
