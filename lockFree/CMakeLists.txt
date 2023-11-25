@@ -5,4 +5,6 @@ project(lockFree)
 
 add_executable(queue queue_test.cpp src/reclaim.cpp)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+
 target_include_directories(queue PRIVATE include)

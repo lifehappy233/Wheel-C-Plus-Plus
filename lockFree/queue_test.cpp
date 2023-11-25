@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <cassert>
-#include <chrono>
 
 #include "reclaim.h"
 #include "lockFreeQueue.h"
@@ -16,7 +15,6 @@ void basic_test() {
       assert(str == "lifehappy" + std::to_string(i));
     } else {
       string_q.Push(std::move(str));
-      assert(str == "");
     }
     assert(string_q.Size() == i + 1);
   }
@@ -179,7 +177,7 @@ void lock_free_queue(size_t producer, size_t consumer, int limit) {
     });
   }
 
-  int need = limit * producer / consumer;
+  int need = limit * static_cast<int>(producer) / static_cast<int>(consumer);
 
   for (auto i = 0; i < consumer; i++) {
     consumers.emplace_back([&q, limit = need]() {
@@ -212,7 +210,7 @@ void block_queue(size_t producer, size_t consumer, int limit) {
     });
   }
 
-  int need = limit * producer / consumer;
+  int need = limit * static_cast<int>(producer) / static_cast<int>(consumer);
   for (auto i = 0; i < consumer; i++) {
     consumers.emplace_back([&q, limit = need]() {
       int64_t value;
@@ -243,18 +241,18 @@ void benchmark_test() {
       auto end_block = std::chrono::steady_clock::now();
 
       printf("Producer(%2d), Consumer(%2d), LockFree(%5lld ms), Block(%5lld ms)\n", i, j,
-             std::chrono::duration_cast<std::chrono::milliseconds>(end_lock_free - begin_lock_free).count(),
-             std::chrono::duration_cast<std::chrono::milliseconds>(end_block - begin_block).count());
+             static_cast<int64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(end_lock_free - begin_lock_free).count()),
+             static_cast<int64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(end_block - begin_block).count()));
     }
   }
 }
 
 int main() {
-//  basic_test();
-//  only_one_to_one();
-//  five_to_one();
-//  one_to_five();
-//  ten_to_ten();
+  basic_test();
+  only_one_to_one();
+  five_to_one();
+  one_to_five();
+  ten_to_ten();
 
   benchmark_test();
   return 0;
