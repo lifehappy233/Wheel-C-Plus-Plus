@@ -35,12 +35,15 @@ struct HazardList {
   }
 
   ~ HazardList() {
+    int size = 0;
     auto *p = head_.load(std::memory_order_acquire);
     while (p) {
+      size++;
       auto temp = p;
       p = p->next_.load(std::memory_order_acquire);
       delete temp;
     }
+    std::cout << size << " okk\n";
   }
 
   int32_t Size() {

@@ -80,6 +80,7 @@ void Reclaimer::RequireHazardPoint() {
     old_head = global_hp_list_.head_.load(std::memory_order_acquire);
     p->next_ = old_head;
   } while (!global_hp_list_.head_.compare_exchange_strong(old_head, p, std::memory_order_acq_rel));
+  global_hp_list_.size_.fetch_add(1, std::memory_order::relaxed);
   local_hp_list_.emplace_back(p);
 }
 
