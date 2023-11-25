@@ -254,11 +254,11 @@ int main() {
 //  one_to_five();
 //  ten_to_ten();
 
-  benchmark_test();
+//  benchmark_test();
 
-//  auto begin_lock_free = std::chrono::steady_clock::now();
-//  lock_free_queue(10, 10, 1000000);
-//  auto end_lock_free = std::chrono::steady_clock::now();
-//  std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end_lock_free - begin_lock_free).count() << "\n";
+  auto begin_lock_free = std::chrono::steady_clock::now();
+  lock_free_queue(10, 10, 1000000);
+  auto end_lock_free = std::chrono::steady_clock::now();
+  std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end_lock_free - begin_lock_free).count() << "\n";
   return 0;
 }

@@ -1,4 +1,4 @@
-#include <set>
+#include <unordered_set>
 
 #include "reclaim.h"
 
@@ -37,10 +37,10 @@ void Reclaimer::ReclaimLater(void *ptr, std::function<void(void *)> &&delete_fun
 }
 
 void Reclaimer::ReclaimNoHazard() {
-  if (reclaim_map_.size() < rate_ * global_hp_list_.Size()) {
+  if (reclaim_map_.size() < std::max(rate_ * global_hp_list_.Size(), 10)) {
     return ;
   }
-  std::set<void*> can_not_delete_set;
+  std::unordered_set<void*> can_not_delete_set;
   auto p = global_hp_list_.head_.load(std::memory_order_acquire);
   while (p) {
     void* const ptr = p->ptr_.load(std::memory_order_acquire);

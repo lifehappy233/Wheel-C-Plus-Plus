@@ -7,7 +7,7 @@
 #include <cassert>
 #include <iostream>
 #include <functional>
-#include <map>
+#include <unordered_map>
 
 namespace lockFree {
 
@@ -156,7 +156,7 @@ class Reclaimer {
   HazardList &global_hp_list_;
 
   ReclaimPool reclaim_pool_;
-  std::map<void*, ReclaimPoint*> reclaim_map_;
+  std::unordered_map<void*, ReclaimPoint*> reclaim_map_;
 
   static const int32_t rate_ = 4;
 };
