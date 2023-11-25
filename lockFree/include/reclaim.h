@@ -7,7 +7,7 @@
 #include <cassert>
 #include <iostream>
 #include <functional>
-#include <unordered_map>
+#include <map>
 
 namespace lockFree {
 
@@ -35,15 +35,15 @@ struct HazardList {
   }
 
   ~ HazardList() {
-    int size = 0;
+//    int size = 0;
     auto *p = head_.load(std::memory_order_acquire);
     while (p) {
-      size++;
+//      size++;
       auto temp = p;
       p = p->next_.load(std::memory_order_acquire);
       delete temp;
     }
-    std::cout << size << " okk\n";
+//    std::cout << size << " okk\n";
   }
 
   int32_t Size() {
@@ -156,7 +156,7 @@ class Reclaimer {
   HazardList &global_hp_list_;
 
   ReclaimPool reclaim_pool_;
-  std::unordered_map<void*, ReclaimPoint*> reclaim_map_;
+  std::map<void*, ReclaimPoint*> reclaim_map_;
 
   static const int32_t rate_ = 4;
 };
