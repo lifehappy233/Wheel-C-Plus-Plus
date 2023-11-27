@@ -3,11 +3,11 @@
 #include <cassert>
 
 #include "reclaim.h"
-#include "lockFreeQueue.h"
+#include "lockFreeStack.h"
 #include "block.h"
 
 void basic_test() {
-  lockFree::LockFreeQueue<std::string> string_q;
+  lockFree::LockFreeStack<std::string> string_q;
   for (int i = 0; i < 1000; i++) {
     std::string str = "lifehappy" + std::to_string(i);
     if (i & 1) {
@@ -18,20 +18,25 @@ void basic_test() {
     }
     assert(string_q.Size() == i + 1);
   }
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 999; i >= 0; i--) {
     std::string str;
+//    std::cout << 1 << "\n";
     while (!string_q.Pop(str));
+//    std::cout << 1 << "\n";
     assert(str == "lifehappy" + std::to_string(i));
   }
-  std::cout << lockFree::LockFreeQueue<std::string>::Global_Size() << "\n";
+  std::cout << lockFree::LockFreeStack<std::string>::Global_Size() << "\n";
 }
 
 void only_one_to_one() {
-  lockFree::LockFreeQueue<std::string> q;
+  lockFree::LockFreeStack<std::string> q;
 
-  std::thread a([&q]() {
-    for (int i = 0; i < 1000; i++) {
+  int limit = 100000;
+
+  std::thread a([&q, &limit]() {
+    for (int i = 0; i < limit; i++) {
       std::string str = "lifehappy" + std::to_string(i);
+//      std::cout << "Push\n";
       if (i & 1) {
         q.Push(str);
       } else {
@@ -40,28 +45,29 @@ void only_one_to_one() {
     }
   });
 
-  std::thread b([&q]() {
+  std::thread b([&q, &limit]() {
     std::string str;
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < limit; i++) {
+//      std::cout << "Pop " << i << "\n";
+//      while (q.Size() && !q.Pop(str));
       while (!q.Pop(str));
 
-      assert(str == "lifehappy" + std::to_string(i));
+//      std::cout << str << "\n";
+//      assert(str == "lifehappy" + std::to_string(i));
     }
   });
-
   a.join();
   b.join();
-
-  std::cout << lockFree::LockFreeQueue<std::string>::Global_Size() << "\n";
+  std::cout << lockFree::LockFreeStack<std::string>::Global_Size() << "\n";
 }
 
 void five_to_one() {
-  lockFree::LockFreeQueue<std::string> q;
+  lockFree::LockFreeStack<std::string> q;
 
   std::vector<std::thread> threads1;
   for (int i = 0; i < 5; i++) {
     threads1.emplace_back([&q]() {
-      for (int i = 0; i < 1000; i++) {
+      for (int i = 0; i < 100000; i++) {
         std::string str = "lifehappy" + std::to_string(i);
         if (i & 1) {
           q.Push(str);
@@ -74,7 +80,7 @@ void five_to_one() {
   std::unordered_map<std::string, int> mp;
   auto b = std::thread([&q, &mp]() {
     std::string str;
-    for (int i = 0; i < 5000; i++) {
+    for (int i = 0; i < 500000; i++) {
       while (!q.Pop(str));
       mp[str]++;
     }
@@ -89,14 +95,14 @@ void five_to_one() {
     assert(it.second == 5);
   }
   assert(q.Size() == 0);
-  std::cout << lockFree::LockFreeQueue<std::string>::Global_Size() << "\n";
+  std::cout << lockFree::LockFreeStack<std::string>::Global_Size() << "\n";
 }
 
 void one_to_five() {
-  lockFree::LockFreeQueue<std::string> q;
+  lockFree::LockFreeStack<std::string> q;
 
   std::thread a([&q]() {
-    for (int i = 0; i < 5000; i++) {
+    for (int i = 0; i < 5000000; i++) {
       std::string str = "lifehappy" + std::to_string(i);
       if (i & 1) {
         q.Push(str);
@@ -110,7 +116,7 @@ void one_to_five() {
   for (int i = 0; i < 5; i++) {
     threads.emplace_back([&q]() {
       std::string str;
-      for (int i = 0; i < 1000; i++) {
+      for (int i = 0; i < 1000000; i++) {
         while (!q.Pop(str));
       }
     });
@@ -122,16 +128,16 @@ void one_to_five() {
   }
 
   assert(q.Size() == 0);
-  std::cout << lockFree::LockFreeQueue<std::string>::Global_Size() << "\n";
+  std::cout << lockFree::LockFreeStack<std::string>::Global_Size() << "\n";
 }
 
 void ten_to_ten() {
-  lockFree::LockFreeQueue<std::string> q;
+  lockFree::LockFreeStack<std::string> q;
 
   std::vector<std::thread> threads1;
   for (int i = 0; i < 10; i++) {
     threads1.emplace_back([&q]() {
-      for (int i = 0; i < 1001; i++) {
+      for (int i = 0; i < 100000; i++) {
         std::string str = "lifehappy" + std::to_string(i);
         if (i & 1) {
           q.Push(str);
@@ -146,7 +152,7 @@ void ten_to_ten() {
   for (int i = 0; i < 10; i++) {
     threads2.emplace_back([&q]() {
       std::string str;
-      for (int i = 0; i < 1000; i++) {
+      for (int i = 0; i < 100000; i++) {
         while (!q.Pop(str));
       }
     });
@@ -159,15 +165,15 @@ void ten_to_ten() {
     it.join();
   }
 
-  assert(q.Size() == 10);
-  std::cout << lockFree::LockFreeQueue<std::string>::Global_Size() << "\n";
+//  assert(q.Size() == 10);
+  std::cout << lockFree::LockFreeStack<std::string>::Global_Size() << "\n";
 }
 
 void lock_free_queue(size_t producer, size_t consumer, int limit) {
   std::vector<std::thread> producers;
   std::vector<std::thread> consumers;
 
-  lockFree::LockFreeQueue<std::string> q;
+  lockFree::LockFreeStack<std::string> q;
 
   for (auto i = 0; i < producer; i++) {
     producers.emplace_back([&q, limit]() {
@@ -205,7 +211,7 @@ void block_queue(size_t producer, size_t consumer, int limit) {
   std::vector<std::thread> producers;
   std::vector<std::thread> consumers;
 
-  block::BlockQueue<std::string> q;
+  block::BlockStack<std::string> q;
 
   for (auto i = 0; i < producer; i++) {
     producers.emplace_back([&q, limit]() {
@@ -245,7 +251,6 @@ void benchmark_test() {
       lock_free_queue(i, j, 1000000);
       auto end_lock_free = std::chrono::steady_clock::now();
 
-
       auto begin_block = std::chrono::steady_clock::now();
       block_queue(i, j, 1000000);
       auto end_block = std::chrono::steady_clock::now();
@@ -264,11 +269,6 @@ int main() {
 //  one_to_five();
 //  ten_to_ten();
 
-//  benchmark_test();
-
-  auto begin_lock_free = std::chrono::steady_clock::now();
-  lock_free_queue(10, 10, 1000000);
-  auto end_lock_free = std::chrono::steady_clock::now();
-  std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end_lock_free - begin_lock_free).count() << "\n";
+  benchmark_test();
   return 0;
 }

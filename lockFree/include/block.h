@@ -3,6 +3,7 @@
 
 #include <mutex>
 #include <queue>
+#include <stack>
 
 namespace block {
 
@@ -16,6 +17,42 @@ class BlockQueue {
   BlockQueue(BlockQueue &&other) = delete;
   BlockQueue& operator = (const BlockQueue &other) = delete;
   BlockQueue& operator = (BlockQueue &&other) = delete;
+
+  void Push(const T &data) { Emplace(data); }
+
+  void Push(T &&data) { Emplace(std::move(data)); }
+
+  bool Pop(T &data) {
+    std::unique_lock lock(mu_);
+    if (q_.empty()) {
+      return false;
+    }
+    data = q_.front();
+    q_.pop();
+    return true;
+  }
+
+ private:
+  template<typename Arg>
+  void Emplace(Arg &&arg) {
+    std::unique_lock lock(mu_);
+    q_.push(std::forward<Arg>(arg));
+  }
+
+  std::mutex mu_;
+  std::queue<T> q_;
+};
+
+template<typename T>
+class BlockStack {
+ public:
+  BlockStack() = default;
+  ~ BlockStack() = default;
+
+  BlockStack(const BlockStack &other) = delete;
+  BlockStack(BlockStack &&other) = delete;
+  BlockStack& operator = (const BlockStack &other) = delete;
+  BlockStack& operator = (BlockStack &&other) = delete;
 
   void Push(const T &data) { Emplace(data); }
 

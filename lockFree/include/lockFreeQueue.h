@@ -160,13 +160,10 @@ LockFreeQueue<T>::Data* LockFreeQueue<T>::AcquireSafeNode(std::atomic<Data *> &a
   auto *node = atomic_node.load(std::memory_order_acquire);
   Data *temp;
   do {
-    // std::cout << "OKK ---\n";
-    // std::cout << hp.index() << "\n";
     hp.Unmark();
     temp = node;
     hp = HazardPoint(&reclaimer, node);
     node = atomic_node.load(std::memory_order_acquire);
-    // std::cout << "OKK ***\n";
   } while (temp != node);
   return node;
 }
