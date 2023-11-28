@@ -1,0 +1,178 @@
+<mxfile host="Electron" modified="2023-11-28T08:02:57.444Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.7.5 Chrome/114.0.5735.289 Electron/25.8.1 Safari/537.36" etag="-o850PWyWsLgG8Hsl093" version="21.7.5" type="device">
+  <diagram name="第 1 页" id="RAFWVlt1COdzInmdE8SN">
+    <mxGraphModel dx="1200" dy="2005" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-8" value="&lt;b&gt;0000 (0)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="310" y="-90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-9" value="&lt;b&gt;0010 (4)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="390" y="-90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-10" value="&lt;b&gt;0100 (2)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="470" y="-90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-11" value="&lt;b&gt;0110 (6)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="550" y="-90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-12" value="&lt;b&gt;1000 (1)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="630" y="-90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-13" value="&lt;b&gt;1010 (5)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="710" y="-90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-14" value="&lt;b&gt;1100 (3)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="790" y="-90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-15" value="&lt;b&gt;1110 (7)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="870" y="-90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-16" value="&lt;b&gt;Hash (key-value)&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="100" y="-90" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-17" value="&lt;b&gt;0001 (0)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="-10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-19" value="&lt;b&gt;0011 (4)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="-10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-20" value="&lt;b&gt;0101 (2)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="470" y="-10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-21" value="&lt;b&gt;0111 (6)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="-10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-22" value="&lt;b&gt;1001 (1)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="-10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-23" value="&lt;b&gt;1011 (5)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="710" y="-10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-24" value="&lt;b&gt;1101 (3)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="-10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-25" value="&lt;b&gt;1111 (7)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="-10" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-26" value="&lt;b&gt;0000 (0)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="120" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-27" value="&lt;b&gt;0000 (0)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-30" value="&lt;b&gt;0011 (4)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-31" value="&lt;b&gt;0101 (2)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-32" value="&lt;b&gt;0111 (6)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-33" value="&lt;b&gt;1000 (1)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="760" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-34" value="&lt;b&gt;1001 (1)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="840" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-35" value="&lt;b&gt;1011 (5)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-36" value="&lt;b&gt;1101 (3)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-37" value="&lt;b&gt;1111 (7)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1081" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-38" value="&lt;b&gt;0000 (0)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="120" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-39" value="&lt;b&gt;0001 (0)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-40" value="&lt;b&gt;0011 (4)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-41" value="&lt;b&gt;0100 (2)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="440" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-42" value="&lt;b&gt;0101 (2)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-45" value="&lt;b&gt;1000 (1)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="760" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-46" value="&lt;b&gt;1001 (1)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="840" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-47" value="&lt;b&gt;1011 (5)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-48" value="&lt;b&gt;1100 (3)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="1081" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-49" value="&lt;b&gt;1101 (3)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-50" value="&lt;b&gt;1111 (7)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1241" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-51" value="&lt;b&gt;0111 (6)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-52" value="&lt;b&gt;0000 (0)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="120" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-54" value="&lt;b&gt;0000 (0)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-56" value="&lt;b&gt;0010 (4)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="280" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-57" value="&lt;b&gt;0011 (4)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-58" value="&lt;b&gt;0100 (2)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="440" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-59" value="&lt;b&gt;0101 (2)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-60" value="&lt;b&gt;0110 (6)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="600" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-61" value="&lt;b&gt;0111 (6)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-62" value="&lt;b&gt;1000 (1)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="760" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-63" value="&lt;b&gt;1001 (1)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="840" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-64" value="&lt;b&gt;1010 (5)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="920" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-65" value="&lt;b&gt;1011 (5)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-66" value="&lt;b&gt;1100 (3)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-67" value="&lt;b&gt;1101 (3)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1161" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-68" value="&lt;b&gt;1110 (7)&amp;nbsp;&lt;/b&gt;" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;shape=mxgraph.archimate3.application;appType=actor;archiType=square;" vertex="1" parent="1">
+          <mxGeometry x="1241" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-69" value="&lt;b&gt;1111 (7)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1321" y="520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FZ4wsT6G5ozGQsdqxxKQ-70" value="&lt;b style=&quot;font-size: 17px;&quot;&gt;Reverse(Key)&amp;nbsp; (key-value)&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="640" y="280" width="230" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
