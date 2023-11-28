@@ -1,10 +1,9 @@
+#include <mutex>
 #include <iostream>
-#include <cmath>
+#include <unordered_map>
 
 #include "lockFreeHashTable.h"
 
 int main() {
-  auto hash = std::hash<std::string>();
-  std::cout << hash("okkk\n") << "\n";
   return 0;
 }

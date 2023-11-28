@@ -46,7 +46,7 @@ struct HazardList {
 //    std::cout << size << " okk\n";
   }
 
-  int32_t Size() {
+  size_t Size() {
     return size_.load(std::memory_order_relaxed);
   }
 
@@ -55,7 +55,7 @@ struct HazardList {
   HazardList& operator = (const HazardList &other) = delete;
   HazardList& operator = (HazardList &&other) = delete;
 
-  std::atomic<int32_t> size_;
+  std::atomic<size_t> size_;
   std::atomic<InternalHazardPoint*> head_;
 };
 
@@ -158,7 +158,7 @@ class Reclaimer {
   ReclaimPool reclaim_pool_;
   std::unordered_map<void*, ReclaimPoint*> reclaim_map_;
 
-  static const int32_t rate_ = 4;
+  static const size_t rate_ = 4;
 };
 
 class HazardPoint {

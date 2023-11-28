@@ -4,6 +4,7 @@
 #include <mutex>
 #include <queue>
 #include <stack>
+#include <unordered_map>
 
 namespace block {
 
@@ -78,6 +79,80 @@ class BlockStack {
   std::mutex mu_;
   std::queue<T> q_;
 };
+
+template<typename K, typename V>
+class BlockHashMap {
+ public:
+  BlockHashMap() = default;
+  ~ BlockHashMap() = default;
+
+  BlockHashMap(const BlockHashMap &other) = delete;
+  BlockHashMap(BlockHashMap &&other) = delete;
+  BlockHashMap& operator = (const BlockHashMap &other) = delete;
+  BlockHashMap& operator = (BlockHashMap &&other) = delete;
+
+  bool Insert(const K &key, const V &value) { return Emplace(key, value); }
+
+  bool Insert(const K &key, V &&value) { return Emplace(key, std::move(value)); }
+
+  bool Insert(K &&key, const V &value) { return Emplace(std::move(key), value); }
+
+  bool Insert(K &&key, V &&value) { return Emplace(std::move(key), std::move(value)); }
+
+  bool Find(const K &key, V &value);
+
+  bool Delete(const K &key);
+
+  size_t Size() {
+    auto lock = std::unique_lock(mutex_);
+    return size_;
+  }
+ private:
+
+  template<typename ArgK, typename ArgV>
+  bool Emplace(ArgK &&key, ArgV &&value);
+
+  bool InnerFind(const K &key) {
+    return map_.count(key);
+  }
+
+  size_t size_;
+  std::mutex mutex_;
+  std::unordered_map<K, V> map_;
+};
+
+template<typename K, typename V>
+template<typename ArgK, typename ArgV>
+bool BlockHashMap<K, V>::Emplace(ArgK &&key, ArgV &&value) {
+  auto lock = std::unique_lock<std::mutex>(mutex_);
+  if (InnerFind(key)) {
+    return false;
+  }
+  map_[std::forward<ArgK>(key)] = std::forward<ArgV>(value);
+  size_++;
+  return true;
+}
+
+template<typename K, typename V>
+bool BlockHashMap<K, V>::Find(const K &key, V &value) {
+  auto lock = std::unique_lock<std::mutex>(mutex_);
+  if (InnerFind(key)) {
+    value = map_[key];
+    return true;
+  }
+  return false;
+}
+
+template<typename K, typename V>
+bool BlockHashMap<K, V>::Delete(const K &key) {
+  auto lock = std::unique_lock<std::mutex>(mutex_);
+  if (InnerFind(key)) {
+    map_.erase(key);
+    size_--;
+    return true;
+  }
+  return false;
+}
 
 }
 

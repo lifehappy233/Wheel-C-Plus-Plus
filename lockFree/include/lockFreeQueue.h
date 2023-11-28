@@ -28,11 +28,11 @@ class LockFreeQueue {
 
   bool Pop(T &data);
 
-  int32_t Size() {
+  size_t Size() {
     return size_.load(std::memory_order_acquire);
   }
 
-  static int32_t Global_Size() {
+  static size_t Global_Size() {
     return global_hp_list_.Size();
   }
 
@@ -74,7 +74,7 @@ class LockFreeQueue {
 
   std::atomic<Data*> front_;
   std::atomic<Data*> tail_;
-  std::atomic<int32_t> size_;
+  std::atomic<size_t> size_;
   static HazardList global_hp_list_;
 };
 

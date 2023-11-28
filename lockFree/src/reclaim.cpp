@@ -37,7 +37,7 @@ void Reclaimer::ReclaimLater(void *ptr, std::function<void(void *)> &&delete_fun
 }
 
 void Reclaimer::ReclaimNoHazard() {
-  if (reclaim_map_.size() < std::max(rate_ * global_hp_list_.Size(), 10)) {
+  if (reclaim_map_.size() < std::max(rate_ * global_hp_list_.Size(), static_cast<size_t>(10))) {
     return ;
   }
   std::unordered_set<void*> can_not_delete_set;
