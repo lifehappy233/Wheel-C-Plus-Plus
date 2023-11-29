@@ -6,3 +6,4 @@ Modern-CMake-for-Cpp
 threadPool/main
 HazardPointer
 LockFreeQueue
+LockFreeHashTable
