@@ -19,7 +19,6 @@ class LockFreeStack {
   ~ LockFreeStack() {
     auto *p = front_.load(std::memory_order_acquire);
     while (p) {
-//      std::cout << "~ LockFreeStack()\n";
       auto temp = p;
       p = p->next_.load(std::memory_order_acquire);
       delete temp;

@@ -116,7 +116,7 @@ class BlockHashMap {
     return map_.count(key);
   }
 
-  size_t size_;
+  size_t size_{0};
   std::mutex mutex_;
   std::unordered_map<K, V> map_;
 };

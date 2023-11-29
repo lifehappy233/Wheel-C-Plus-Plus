@@ -31,19 +31,15 @@ struct InternalHazardPoint {
 
 struct HazardList {
   HazardList() : size_(1), head_(new InternalHazardPoint()) {
-    // std::cout << std::this_thread::get_id() << " HazardList()\n";
   }
 
   ~ HazardList() {
-//    int size = 0;
     auto *p = head_.load(std::memory_order_acquire);
     while (p) {
-//      size++;
       auto temp = p;
       p = p->next_.load(std::memory_order_acquire);
       delete temp;
     }
-//    std::cout << size << " okk\n";
   }
 
   size_t Size() {
@@ -109,12 +105,9 @@ struct ReclaimPool {
 
 class Reclaimer {
  public:
-  explicit Reclaimer(HazardList &global_hp_list) : global_hp_list_(global_hp_list) {
-    // std::cout << std::this_thread::get_id() << " Reclaimer()\n";
-  }
+  explicit Reclaimer(HazardList &global_hp_list) : global_hp_list_(global_hp_list) { }
 
   virtual ~ Reclaimer() {
-    // std::cout << std::this_thread::get_id() << " ~ Reclaimer()\n";
     // 将当前持有的 local hazard point 归还到 global hazard list
     for (auto it : local_hp_list_) {
       assert(it->ptr_.load(std::memory_order_acquire) == nullptr);
@@ -172,7 +165,7 @@ class HazardPoint {
     Unmark();
   }
 
-  int32_t index() {
+  int32_t Index() const {
     return index_;
   }
 

@@ -172,7 +172,7 @@ class LockFreeHashTable {
   };
 
   struct Dummy : public Node {
-    Dummy(size_t index) : Node(index, true) {}
+    explicit Dummy(size_t index) : Node(index, true) {}
     ~ Dummy() override = default;
 
     Dummy() = delete;
@@ -192,7 +192,7 @@ class LockFreeHashTable {
 
   Segment* NewSegments(int level);
 
-  bool InsertDummy(Dummy *parent, Dummy *dummy, Dummy **head);
+  bool InsertDummy(Dummy *parent_head, Dummy *head, Dummy **maybe_head);
 
   bool SearchNode(Dummy* head, Node* search_node, Node** prev_ptr,
                   Node** cur_ptr, HazardPoint &prev_hp, HazardPoint &cur_hp);
@@ -232,9 +232,7 @@ class HashTableReclaimer : public Reclaimer {
   HashTableReclaimer& operator = (const HashTableReclaimer &other) = delete;
   HashTableReclaimer& operator = (HashTableReclaimer &&other) = delete;
  private:
-  explicit HashTableReclaimer(HazardList &global_hp_list) : Reclaimer(global_hp_list) {
-    // std::cout << std::this_thread::get_id() << " HashTableReclaimer()\n";
-  }
+  explicit HashTableReclaimer(HazardList &global_hp_list) : Reclaimer(global_hp_list) { }
 };
 
 template <typename K, typename V>

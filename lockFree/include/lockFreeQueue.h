@@ -90,9 +90,7 @@ class QueueReclaimer : public Reclaimer {
     return queueReclaimer;
   }
 
-  ~ QueueReclaimer() override {
-    // std::cout << std::this_thread::get_id() << " ~ QueueReclaimer()\n";
-  }
+  ~ QueueReclaimer() override = default;
 
   QueueReclaimer() = delete;
   QueueReclaimer(const QueueReclaimer &other) = delete;
@@ -100,25 +98,18 @@ class QueueReclaimer : public Reclaimer {
   QueueReclaimer& operator = (const QueueReclaimer &other) = delete;
   QueueReclaimer& operator = (QueueReclaimer &&other) = delete;
  private:
-  explicit QueueReclaimer(HazardList &global_hp_list) : Reclaimer(global_hp_list) {
-    // std::cout << std::this_thread::get_id() << " QueueReclaimer()\n";
-  }
+  explicit QueueReclaimer(HazardList &global_hp_list) : Reclaimer(global_hp_list) { }
 };
 
 template<typename T> template<typename Arg>
 void LockFreeQueue<T>::Emplace(Arg &&arg) {
   T *data = new T(std::forward<Arg>(arg));
   auto *new_tail = new Data();
-  // std::cout << *data << "\n";
   for (;;) {
     HazardPoint hp;
-    // std::cout << "OKK\n";
-    // std::cout << hp.index() << "\n";
     auto tail = AcquireSafeNode(tail_, hp);
-    // std::cout << hp.index() << "\n";
     T *null_ptr = nullptr;
     if (tail->data_.compare_exchange_strong(null_ptr, data, std::memory_order_acq_rel)) {
-//      std::cout << *tail->data_.load(std::memory_order_acquire) << "\n";
       if (!InsertNewTail(tail, new_tail)) {
         delete new_tail;
       }
@@ -143,11 +134,8 @@ bool LockFreeQueue<T>::Pop(T &data) {
     }
     new_front = front->next_.load(std::memory_order_acquire);
   } while (!front_.compare_exchange_strong(front, new_front, std::memory_order_acq_rel));
-//  std::cout << *front->data_.load() << "\n";
-//  std::cout << *front->data_.load(std::memory_order_acquire) << "\n";
   size_.fetch_sub(1, std::memory_order_acq_rel);
   data = std::forward<T>(*front->data_.load(std::memory_order_acquire));
-//  std::cout << data << "\n";
   auto &reclaimer = QueueReclaimer<T>::GetInstance();
   reclaimer.ReclaimLater(front, DeleteData);
   reclaimer.ReclaimNoHazard();
