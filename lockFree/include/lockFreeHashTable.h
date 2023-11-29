@@ -44,41 +44,27 @@ size_t ReverseBit24(size_t num) {
   return (reverseTable[num & 0xFF] << 16) | (reverseTable[(num >> 8) & 0xFF] << 8) | reverseTable[(num >> 16) & 0xFF];
 }
 
-struct Segment {
-  Segment() : level_(0), data_(nullptr) {}
-
-  explicit Segment(size_t level) : level_(level), data_(nullptr) {}
-
-  ~Segment() {
-    void *ptr = data_.load(std::memory_order_acquire);
-    if (ptr == nullptr) {
-      return;
-    }
-
-    if (level_ <= MaxSegLevel) {
-      auto *segment = static_cast<Segment *>(ptr);
-      delete[] segment;
-    } else {
-      // TODO: (delete bucket node)
-    }
-  }
-
-  Segment(const Segment &other) = delete;
-  Segment(Segment &&other) = delete;
-  Segment &operator=(const Segment &other) = delete;
-  Segment &operator=(Segment &&other) = delete;
-
-  size_t level_;
-  std::atomic<void *> data_;
-};
-
 template <typename K, typename V>
 class LockFreeHashTable {
+  struct Dummy;
   using Hash = std::hash<K>;
+  using Bucket = std::atomic<Dummy*>;
  public:
-  LockFreeHashTable() : hash_func_(Hash()), size_(0) {
+  LockFreeHashTable() : hash_func_(Hash()), size_(0), bucket_size_(0) {
+    auto *segments = segments_;
+    for (size_t level = 1; level <= MaxSegLevel; level++) {
+      auto *new_segments = NewSegments(level);
+      segments[0].data_.store(new_segments, std::memory_order_release);
+      segments = new_segments;
+    }
+    auto *buckets = NewBuckets();
+    segments[0].data_.store(buckets, std::memory_order_release);
 
+    auto *head = new Dummy(0);
+    buckets[0].store(head, std::memory_order_release);
+    head_ = head;
   }
+
   ~LockFreeHashTable() = default;
 
   LockFreeHashTable(const LockFreeHashTable &other) = delete;
@@ -101,12 +87,47 @@ class LockFreeHashTable {
   size_t Size() { return size_.load(std::memory_order_acquire); }
 
  private:
+
   template <typename ArgK, typename ArgV>
   bool Emplace(ArgK &&key, ArgV &&value);
 
   size_t GetHash(const K &key) {
     return (hash_func_(key) & (0xffffff));
   }
+
+  size_t GetParentIndex(size_t index) {
+    size_t high = 31 - __builtin_clz(index);
+    return (index & (~(1 << high)));
+  }
+
+  struct Segment {
+    Segment() : level_(0), data_(nullptr) {}
+
+    explicit Segment(size_t level) : level_(level), data_(nullptr) {}
+
+    ~Segment() {
+      void *ptr = data_.load(std::memory_order_acquire);
+      if (ptr == nullptr) {
+        return;
+      }
+
+      if (level_ <= MaxSegLevel) {
+        auto *segment = static_cast<Segment *>(ptr);
+        delete[] segment;
+      } else {
+        auto *buckets = static_cast<Bucket *>(ptr);
+        delete[] buckets;
+      }
+    }
+
+    Segment(const Segment &other) = delete;
+    Segment(Segment &&other) = delete;
+    Segment &operator=(const Segment &other) = delete;
+    Segment &operator=(Segment &&other) = delete;
+
+    size_t level_;
+    std::atomic<void *> data_;
+  };
 
   struct Node {
     Node(size_t hash, bool is_dummy)
@@ -140,12 +161,18 @@ class LockFreeHashTable {
       delete value;
     }
 
+    Regular() = delete;
+    Regular(const Regular &other) = delete;
+    Regular(Regular &&other) = delete;
+    Regular& operator = (const Regular &other) = delete;
+    Regular& operator = (Regular &&other) = delete;
+
     const K key_;
     std::atomic<V *> value_;
   };
 
   struct Dummy : public Node {
-    Dummy(size_t hash) : Node(hash, true) {}
+    Dummy(size_t index) : Node(index, true) {}
     ~ Dummy() override = default;
 
     Dummy() = delete;
@@ -155,11 +182,30 @@ class LockFreeHashTable {
     Dummy& operator = (Dummy &&other) = delete;
   };
 
-  std::atomic<size_t> size_;
+  Dummy* GetBucketByIndex(size_t index);
 
-  Segment segments_[KSegMaxSize];
+  Dummy* GetBucketByHash(size_t hash);
+
+  Dummy* InitializeBucket(size_t index);
+
+  Bucket* NewBuckets();
+
+  Segment* NewSegments(int level);
+
+  bool InsertDummy(Dummy *parent, Dummy *dummy, Dummy **head);
+
+  bool SearchNode(Dummy* head, Node* search_node, Node** prev_ptr,
+                  Node** cur_ptr, HazardPoint &prev_hp, HazardPoint &cur_hp);
 
   Hash hash_func_;
+
+  Dummy *head_;
+
+  std::atomic<size_t> size_;
+
+  std::atomic<size_t> bucket_size_;
+
+  Segment segments_[KSegMaxSize];
 
   static HazardList global_hp_list_;
 };
@@ -177,7 +223,7 @@ class HashTableReclaimer : public Reclaimer {
   }
 
   ~ HashTableReclaimer() override {
-     std::cout << std::this_thread::get_id() << " ~ HashTableReclaimer()\n";
+    std::cout << std::this_thread::get_id() << " ~ HashTableReclaimer()\n";
   }
 
   HashTableReclaimer() = delete;
@@ -206,6 +252,128 @@ template <typename K, typename V>
 bool LockFreeHashTable<K, V>::Delete(const K &key) {
   return true;
 }
+
+template <typename K, typename V>
+LockFreeHashTable<K, V>::Bucket* LockFreeHashTable<K, V>::NewBuckets()  {
+  auto *buckets = new Bucket[KSegMaxSize];
+  for (size_t i = 0; i < KSegMaxSize; i++) {
+    buckets[i].store(nullptr, std::memory_order_release);
+  }
+  return buckets;
+}
+
+template <typename K, typename V>
+LockFreeHashTable<K, V>::Segment* LockFreeHashTable<K, V>::NewSegments(int level) {
+  auto *segments = new Segment[KSegMaxSize];
+  for (size_t i = 0; i < KSegMaxSize; i++) {
+    segments[i].level_ = level;
+  }
+  return segments;
+}
+
+template <typename K, typename V>
+LockFreeHashTable<K, V>::Dummy* LockFreeHashTable<K, V>::GetBucketByIndex(size_t index) {
+  auto *segments = segments_;
+  Bucket *buckets;
+  Dummy *bucket;
+  for (size_t level = 0; level <= MaxSegLevel; level++) {
+    size_t id = HASH_LEVEL_INDEX(index, level);
+    if (level != MaxSegLevel) { // 0 -> 1 -> 2 共三层加载两次
+      segments = static_cast<Segment *>(segments_[id].data_.load(std::memory_order_acquire));
+      if (segments == nullptr) {
+        return nullptr;
+      }
+    } else {
+      buckets = static_cast<Bucket *>(segments[id].data_.load(std::memory_order_acquire));
+      if (buckets == nullptr) {
+        return nullptr;
+      }
+      id = HASH_LEVEL_INDEX(index, BucketLevel);
+      bucket =  buckets[id].load(std::memory_order_acquire);
+    }
+  }
+  return bucket;
+}
+
+template <typename K, typename V>
+LockFreeHashTable<K, V>::Dummy* LockFreeHashTable<K, V>::GetBucketByHash(size_t hash) {
+  auto bucket_size = bucket_size_.load(std::memory_order_acquire);
+  auto index = hash & (bucket_size - 1);
+  auto *head = GetBucketByIndex(index);
+  if (head == nullptr) {
+
+  }
+  return head;
+}
+
+template <typename K, typename V>
+LockFreeHashTable<K, V>::Dummy* LockFreeHashTable<K, V>::InitializeBucket(size_t index) {
+  size_t parent_index = GetParentIndex(index);
+  Dummy *parent_head = GetBucketByIndex(parent_index);
+  if (parent_head == nullptr) {
+    parent_head = InitializeBucket(parent_index);
+  }
+
+  auto *segments = segments_;
+  Bucket *buckets;
+  for (size_t level = 0; level <= MaxSegLevel; level++) {
+    size_t id = HASH_LEVEL_INDEX(index, level);
+    Segment &segment = segments[id];
+    if (level != MaxSegLevel) {
+      auto *sub_segments = static_cast<Segment*>(segment.data_.load(std::memory_order_acquire));
+      if (sub_segments == nullptr) {
+        sub_segments = NewSegments(level + 1);
+        void *expect = nullptr;
+        if (!segment.data_.compare_exchange_strong(expect, sub_segments, std::memory_order_acq_rel)) {
+          delete []sub_segments;
+          sub_segments = static_cast<Segment*>(expect);
+        }
+      }
+      segments = sub_segments;
+    } else {
+      buckets = static_cast<Bucket*>(segment.data_.load(std::memory_order_acquire));
+      if (buckets == nullptr) {
+        buckets = NewBuckets();
+        void *expect = nullptr;
+        if (!segment.data_.compare_exchange_strong(expect, buckets, std::memory_order_acq_rel)) {
+          delete []buckets;
+          buckets = static_cast<Bucket*>(expect);
+        }
+      }
+    }
+  }
+  size_t id = HASH_LEVEL_INDEX(index, BucketLevel);
+  Bucket &bucket = buckets[id];
+
+  auto head = bucket.load(std::memory_order_acquire);
+  if (head == nullptr) {
+    head = new Dummy(index);
+    Dummy *maybe_head;
+    if (InsertDummy(parent_head, head, &maybe_head)) {
+      bucket.store(head, std::memory_order_release);
+    } else {
+      delete head;
+      head = maybe_head;
+    }
+  }
+  return head;
+}
+
+template <typename K, typename V>
+bool LockFreeHashTable<K, V>::SearchNode(Dummy *head, Node *search_node, Node **prev_ptr,
+                                         Node **cur_ptr, HazardPoint &prev_hp, HazardPoint &cur_hp) {
+
+}
+
+template <typename K, typename V>
+bool LockFreeHashTable<K, V>::InsertDummy(Dummy *parent_head, Dummy *head, Dummy **maybe_head) {
+  // TODO:
+  if (parent_head & 1) {
+    return false;
+  }
+  return true;
+}
+
 }
 
 #endif
